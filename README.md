@@ -15,13 +15,14 @@ When a Google Meet URL is opened, MeetChooser presents a dialog listing all sign
 
 ## Installation
 
-1. Copy `MeetChooser.app` to `~/Applications` (or `/Applications`)
-2. Right-click → **Open** on first launch to bypass Gatekeeper
-3. On first run, a config file will be created automatically at:
+1. Download the latest `MeetChooser.app.zip` from [GitHub Releases](https://github.com/DelphicOkami/meet-chooser/releases/latest)
+2. Unzip and copy `MeetChooser.app` to `~/Applications` (or `/Applications`)
+3. Right-click → **Open** on first launch to bypass Gatekeeper
+4. On first run, a config file will be created automatically at:
    ```
    ~/.config/meet-chooser-config.sh
    ```
-4. Edit that file to customise behaviour — see [Configuration](#configuration)
+5. Edit that file to customise behaviour — see [Configuration](#configuration)
 
 ## Configuration
 
