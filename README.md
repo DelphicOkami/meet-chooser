@@ -53,15 +53,17 @@ MeetChooser needs to be registered as the handler for Google Meet URLs. The reco
 2. Add a rule to your `~/.finicky.js` config to send Meet URLs to MeetChooser:
 
 ```js
-module.exports = {
-  defaultBrowser: "Google Chrome",
+export default {
+  defaultBrowser: {
+    name: "com.google.Chrome",
+    appType: "bundleId",
+  },
   handlers: [
     {
-      match: /meet\.google\.com\/.+/,
-      app: {
-        name: "MeetChooser",
-        appType: "appName",
-        openAs: "url",
+      match: finicky.matchHostnames(["meet.google.com"]),
+      browser: {
+        name: "/Applications/MeetChooser.app",
+        appType: "path",
       },
     },
   ],
