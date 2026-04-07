@@ -6,28 +6,35 @@ CHROME_DIR="$HOME/Library/Application Support/Google/Chrome"
 
 # ── Load config (create with defaults on first run) ───────────────────────────
 
-CONFIG_FILE="$HOME/.config/meet-chooser-config.sh"
+CONFIG_FILE="$HOME/.config/meet-chooser-config.ini"
 if [ ! -f "$CONFIG_FILE" ]; then
     cat > "$CONFIG_FILE" <<'CONFIG'
-# MeetChooser configuration
-# Edit this file to customise behaviour. Changes take effect immediately.
+[meet-chooser]
 
-# Email address for which Google Meet URL fragments will be stripped.
-# This works around a bug where some accounts receive URLs with fragments
-# that prevent the meeting from loading correctly.
-# Set to "" to disable fragment stripping for all profiles.
-STRIP_FRAGMENT_EMAIL=""
+; Email address for which Google Meet URL fragments will be stripped.
+; This works around a bug where some accounts receive URLs with fragments
+; that prevent the meeting from loading correctly.
+; Leave blank to disable fragment stripping for all profiles.
+strip_fragment_email =
 
-# Chrome PWA app ID for Google Meet.
-PWA_APP_ID="kjgfgldnnfoeklkmfkjfagphfepbbdan"
+; Chrome PWA app ID for Google Meet.
+pwa_app_id = kjgfgldnnfoeklkmfkjfagphfepbbdan
 
-# Path to the Google Chrome executable.
-CHROME="/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
+; Full path to the Google Chrome executable.
+chrome = /Applications/Google Chrome.app/Contents/MacOS/Google Chrome
 CONFIG
 fi
 
-# shellcheck source=/dev/null
-source "$CONFIG_FILE"
+eval "$(python3 - "$CONFIG_FILE" <<'PYEOF'
+import configparser, sys
+cfg = configparser.ConfigParser()
+cfg.read(sys.argv[1])
+def q(v): return "'" + v.replace("'", "'\\''") + "'"
+print('STRIP_FRAGMENT_EMAIL=' + q(cfg.get('meet-chooser', 'strip_fragment_email', fallback='')))
+print('PWA_APP_ID=' + q(cfg.get('meet-chooser', 'pwa_app_id', fallback='kjgfgldnnfoeklkmfkjfagphfepbbdan')))
+print('CHROME=' + q(cfg.get('meet-chooser', 'chrome', fallback='/Applications/Google Chrome.app/Contents/MacOS/Google Chrome')))
+PYEOF
+)"
 
 # ── Discover profiles and their signed-in email addresses ─────────────────────
 

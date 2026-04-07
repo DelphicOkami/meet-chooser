@@ -24,31 +24,41 @@ When a Google Meet URL is opened, MeetChooser presents a dialog listing all sign
    ```
 4. On first run, a config file will be created automatically at:
    ```
-   ~/.config/meet-chooser-config.sh
+   ~/.config/meet-chooser-config.ini
    ```
 5. Edit that file to customise behaviour — see [Configuration](#configuration)
 
 ## Configuration
 
-The config file is created with defaults on first run:
+On first run, MeetChooser creates `~/.config/meet-chooser-config.ini` with defaults. You can also copy the included example file as a starting point:
 
 ```bash
-# ~/.config/meet-chooser-config.sh
-
-# Email address for which Google Meet URL fragments will be stripped.
-# This works around a bug where some accounts receive URLs with fragments
-# that prevent the meeting from loading correctly.
-# Set to "" to disable fragment stripping for all profiles.
-STRIP_FRAGMENT_EMAIL=""
-
-# Chrome PWA app ID for Google Meet.
-PWA_APP_ID="kjgfgldnnfoeklkmfkjfagphfepbbdan"
-
-# Path to the Google Chrome executable.
-CHROME="/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
+cp meet-chooser-config.example.ini ~/.config/meet-chooser-config.ini
 ```
 
+The config file uses INI format with a `[meet-chooser]` section. Available options:
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `STRIP_FRAGMENT_EMAIL` | `""` | Email address for which URL fragments are stripped before opening. Workaround for a bug where fragment-bearing URLs prevent meetings from loading. Leave empty to disable. |
+| `PWA_APP_ID` | `kjgfgldnnfoeklkmfkjfagphfepbbdan` | Chrome PWA app ID for Google Meet. The default is correct for most users — see [Finding the Meet PWA app ID](#finding-the-meet-pwa-app-id) if you need to verify. |
+| `CHROME` | `/Applications/Google Chrome.app/Contents/MacOS/Google Chrome` | Full path to the Chrome executable. Change if Chrome is installed elsewhere. |
+
 Changes take effect immediately — no need to restart anything.
+
+## macOS permissions
+
+### Screen recording
+
+When you try to share your screen in a Google Meet, macOS may prompt you to grant screen recording permission to MeetChooser rather than Chrome. This happens because MeetChooser launched the PWA, making it the parent process in macOS's view.
+
+To fix this, grant screen recording permission to MeetChooser:
+
+1. Open **System Settings → Privacy & Security → Screen Recording**
+2. If MeetChooser is listed, enable the toggle next to it
+3. If it is not listed, click **+**, navigate to `~/Applications` (or `/Applications`), and add `MeetChooser.app`
+
+You may need to restart Chrome after granting the permission for it to take effect.
 
 ## URL handler setup
 
