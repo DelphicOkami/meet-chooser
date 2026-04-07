@@ -17,7 +17,11 @@ When a Google Meet URL is opened, MeetChooser presents a dialog listing all sign
 
 1. Download the latest `MeetChooser.app.zip` from [GitHub Releases](https://github.com/DelphicOkami/meet-chooser/releases/latest)
 2. Unzip and copy `MeetChooser.app` to `~/Applications` (or `/Applications`)
-3. Right-click → **Open** on first launch to bypass Gatekeeper
+3. Strip macOS extended attributes and apply an ad-hoc signature to allow launch:
+   ```bash
+   xattr -cr ~/Applications/MeetChooser.app
+   codesign --force --deep --sign - ~/Applications/MeetChooser.app
+   ```
 4. On first run, a config file will be created automatically at:
    ```
    ~/.config/meet-chooser-config.sh
@@ -121,8 +125,9 @@ git add applet.applescript MeetChooser.app/Contents/Resources/Scripts/main.scpt
 git commit
 ```
 
-When copying the app to a new machine, strip macOS extended attributes first to avoid Gatekeeper noise:
+When copying the app to a new machine, strip macOS extended attributes and apply an ad-hoc signature to avoid Gatekeeper blocking the launch:
 
 ```bash
 xattr -cr MeetChooser.app
+codesign --force --deep --sign - MeetChooser.app
 ```
